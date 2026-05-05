@@ -8,6 +8,18 @@
 doc2md "檔案.pdf"
 ```
 
+## Codex skill
+
+這個 repo 也可以作為 Codex skill 使用。當老師或使用者需要把 PDF、Word、PowerPoint、教師手冊或教材檔轉成 AI 容易處理的 Markdown / Text 時，可以請 Codex 安裝並使用這個 GitHub 專案。
+
+給 Codex 的建議說法：
+
+```text
+請從這個 GitHub 專案安裝並使用 doc2md-toolkit，協助我把教材文件轉成 Markdown 或 UTF-8 文字，再用轉換後的內容建立教學成果：
+
+https://github.com/chianwu-hash/doc2md-toolkit
+```
+
 ## 工具分工
 
 | 情境 | 建議引擎 |

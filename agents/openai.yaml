@@ -1,0 +1,7 @@
+interface:
+  display_name: "doc2md Toolkit"
+  short_description: "Convert PDFs, Office files, and teaching materials to Markdown or text"
+  default_prompt: "Use $doc2md-toolkit to convert my document or folder into Markdown, then help me use the converted text for my teaching workflow."
+
+policy:
+  allow_implicit_invocation: true
