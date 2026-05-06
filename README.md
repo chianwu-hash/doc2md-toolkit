@@ -1,6 +1,6 @@
 # doc2md-toolkit
 
-一個整合 MarkItDown、教材友善 `pdf2txt`、以及 optional MinerU 的文件轉 Markdown / Text 工具包。
+一個整合教材友善 `pdf2txt`、一般文件用 MarkItDown、以及進階 MinerU 輔助流程的文件轉 Markdown / Text 工具包。
 
 目標是讓使用者只記一個指令：
 
@@ -24,9 +24,15 @@ https://github.com/chianwu-hash/doc2md-toolkit
 
 | 情境 | 建議引擎 |
 | --- | --- |
-| 一般 PDF、Word、PPT、Excel、HTML、CSV、JSON | `markitdown` |
-| 國語教材、中文教材、直行文字 PDF、一字一行抽文字 | `pdf2txt` |
-| 掃描 PDF、複雜版面、表格、公式、OCR | `mineru` |
+| 中文教材、備課用書、課本 PDF、直行文字 PDF、一字一行抽文字 | `pdf2txt` |
+| Word、PowerPoint、Excel、HTML、CSV、JSON、XML、EPUB、一般非教材 PDF | `markitdown` |
+| 複雜表格、多欄版面、圖片題、掃描/OCR、公式 | MinerU API 或進階 `mineru` |
+
+教材 PDF 的預設 SOP：
+
+1. 先用 `pdf2txt` 轉成 `.md`，作為正式文字來源。
+2. 若表格、圖片題或多欄版面看不清楚，再用 MinerU API 輔助比對。
+3. 不建議把 MarkItDown 當中文教材 PDF 的主流程；它較適合 Office 與一般文件。
 
 ## 安裝
 
@@ -36,16 +42,22 @@ https://github.com/chianwu-hash/doc2md-toolkit
 pip install -e .
 ```
 
-完整 MarkItDown 依賴：
+完整 MarkItDown 依賴（主要給 Office / 一般文件使用）：
 
 ```powershell
 pip install -e ".[all]"
 ```
 
-MinerU 很重，建議需要時再裝：
+本機 MinerU 依賴較重，只建議進階使用者在硬體足夠時安裝。一般情況優先使用 MinerU API：
 
 ```powershell
 pip install -e ".[mineru]"
+```
+
+若使用 MinerU API，請把 token 放在環境變數，不要提交到 Git：
+
+```powershell
+$env:MINERU_API_TOKEN="你的 token"
 ```
 
 ## 使用
@@ -94,13 +106,24 @@ doc2md "國語教材.pdf" --engine pdf2txt --format txt
 
 適合一般文件轉 Markdown。支援 PDF、Office 文件、HTML、CSV、JSON、XML、EPUB 等常見格式。
 
+對中文教材、備課用書、課本 PDF，MarkItDown 不建議作為主流程；實測常不如 `pdf2txt` 穩定，表格也未必優於 MinerU。
+
 ### pdf2txt
 
 內建的 PDF 文字抽取器，使用 PyMuPDF。特別針對中文直行教材常見的「抽出後一個字一行」問題，會嘗試把直行文字串接成較容易閱讀的內容。
 
+這是中文教材 PDF 的主力流程。建議先輸出 `.md`，再用轉出的 Markdown 作為出題、摘要、備課與 AI 分析的主要依據。
+
 ### MinerU
 
-適合複雜文件解析、掃描件、表格、公式、多欄版面與 OCR。此工具不預設安裝，避免讓一般使用者背負大型模型與依賴。
+適合複雜文件解析、掃描件、表格、公式、多欄版面與 OCR。
+
+建議定位為輔助流程：
+
+- 平常先用 `pdf2txt`。
+- 遇到複雜表格、圖片題、Q&A 表格或版面混雜，再請 MinerU 出場。
+- 優先使用 MinerU API，避免在一般教學電腦上安裝大型本機依賴。
+- 本機 `mineru` CLI 屬進階用法；若硬體不足，請改用 API 或回到 `pdf2txt`。
 
 ## 授權與第三方工具
 

@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "doc2md-toolkit"
 version = "0.1.0"
-description = "Unified CLI for converting documents to Markdown or text with MarkItDown, a vertical-text PDF extractor, and optional MinerU."
+description = "Unified CLI for converting teaching PDFs and documents to Markdown or text with pdf2txt, MarkItDown, and optional MinerU helpers."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -23,7 +23,7 @@ all = [
   "markitdown[all]>=0.1.5"
 ]
 mineru = [
-  "mineru[all]>=3.1.0"
+  "mineru[core]>=3.1.0"
 ]
 dev = [
   "pytest>=8"
