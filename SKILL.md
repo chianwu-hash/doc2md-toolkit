@@ -13,9 +13,10 @@ Use this skill when a task needs source documents converted into Markdown or tex
 2. Install the toolkit if `doc2md` is unavailable.
 3. For Chinese teaching-material PDFs, convert with `pdf2txt` by default and save Markdown as the primary source.
 4. For Word, PowerPoint, Excel, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs, use MarkItDown.
-5. For scanned PDFs, image-only files, OCR-heavy documents, complex tables, formulas, or mixed layouts, do not pretend conversion is complete; mark the file as needing OCR or human confirmation.
-6. Use UTF-8 output artifacts as the source of truth.
-7. Continue the teaching or analysis task from the converted `.md` or `.txt` files.
+5. For scanned PDFs, image-only files, or PDFs without a text layer up to 10 pages, convert pages to images and use small-batch OCR or AI vision as a rescue path.
+6. For scanned/image-only documents over 10 pages, complex tables, formulas, or mixed layouts, do not pretend conversion is complete; mark the file as needing formal OCR or human confirmation.
+7. Use UTF-8 output artifacts as the source of truth.
+8. Continue the teaching or analysis task from the converted `.md` or `.txt` files.
 
 ## Install
 
@@ -71,7 +72,8 @@ Prefer `--engine auto` unless there is a clear reason to choose one.
 
 - Use `pdf2txt` or `--vertical-text` as the main path for Chinese teaching materials, Mandarin textbooks, teacher guides, textbook PDFs, and vertical Chinese PDFs that extract as one character per line.
 - Use `markitdown` for Word, PowerPoint, Excel, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs.
-- For scanned PDFs, image-only documents, OCR-heavy files, complex layout, tables, or formulas, do not pretend conversion is complete. Mark the file as needing OCR or human confirmation before using another specialized tool.
+- For scanned PDFs, image-only documents, or PDFs without a text layer up to 10 pages, convert pages to images and use small-batch OCR or AI vision as a rescue path.
+- For scanned/image-only documents over 10 pages, complex layout, tables, or formulas, do not pretend conversion is complete. Mark the file as needing formal OCR or human confirmation before using another specialized tool.
 
 Examples:
 
@@ -87,6 +89,7 @@ For teaching-material PDFs, the practical SOP is:
 pdf2txt Markdown = primary source
 MarkItDown = not recommended for Chinese textbook/teacher-guide PDFs
 OCR or human confirmation = needed for scanned/image-only files
+small-batch image OCR or AI vision = acceptable rescue path for scanned/image-only files up to 10 pages
 ```
 
 ## Windows And Chinese Text
