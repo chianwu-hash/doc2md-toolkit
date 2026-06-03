@@ -20,20 +20,14 @@ SUPPORTED_EXTENSIONS = {
     ".epub",
     ".txt",
     ".md",
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
 }
 
 
-def choose_engine(path: Path, requested: str, *, vertical_text: bool = False, ocr: bool = False) -> str:
+def choose_engine(path: Path, requested: str, *, vertical_text: bool = False) -> str:
     if requested != "auto":
         return requested
 
     suffix = path.suffix.lower()
-    if ocr:
-        return "mineru"
     if suffix == ".pdf" and vertical_text:
         return "pdf2txt"
     return "markitdown"

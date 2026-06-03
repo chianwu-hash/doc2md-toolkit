@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from .detect import choose_engine, iter_inputs
-from .engines import markitdown_engine, mineru_engine, pdf2txt_engine
+from .engines import markitdown_engine, pdf2txt_engine
 
 
 def output_path_for(src: Path, output: Path | None, *, input_is_dir: bool, output_format: str) -> Path:
@@ -23,7 +23,7 @@ def write_text(dest: Path, text: str) -> None:
 
 
 def convert_one(src: Path, dest: Path, args: argparse.Namespace) -> None:
-    engine = choose_engine(src, args.engine, vertical_text=args.vertical_text, ocr=args.ocr)
+    engine = choose_engine(src, args.engine, vertical_text=args.vertical_text)
 
     if engine == "markitdown":
         text = markitdown_engine.convert(src)
@@ -34,9 +34,6 @@ def convert_one(src: Path, dest: Path, args: argparse.Namespace) -> None:
         if src.suffix.lower() != ".pdf":
             raise RuntimeError("The pdf2txt engine only supports PDF input.")
         write_text(dest, pdf2txt_engine.convert(src, output_format=args.format))
-    elif engine == "mineru":
-        out_dir = dest if dest.suffix == "" else dest.parent
-        mineru_engine.convert(src, out_dir, backend=args.mineru_backend)
     else:
         raise RuntimeError(f"Unknown engine: {engine}")
 
@@ -47,12 +44,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Convert documents to Markdown or text.")
     parser.add_argument("input", help="Input file or folder")
     parser.add_argument("-o", "--output", help="Output file or folder", default=None)
-    parser.add_argument("--engine", choices=["auto", "markitdown", "pdf2txt", "mineru"], default="auto")
+    parser.add_argument("--engine", choices=["auto", "markitdown", "pdf2txt"], default="auto")
     parser.add_argument("--format", choices=["md", "txt"], default="md")
     parser.add_argument("--recursive", action="store_true", help="Process folders recursively")
     parser.add_argument("--vertical-text", action="store_true", help="Prefer pdf2txt for vertical Chinese textbook PDFs")
-    parser.add_argument("--ocr", action="store_true", help="Prefer MinerU for scanned or OCR-heavy documents")
-    parser.add_argument("--mineru-backend", default="pipeline", help="MinerU backend, default: pipeline")
     return parser
 
 

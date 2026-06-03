@@ -11,5 +11,5 @@ def test_choose_engine_uses_pdf2txt_for_vertical_pdf() -> None:
     assert choose_engine(Path("textbook.pdf"), "auto", vertical_text=True) == "pdf2txt"
 
 
-def test_choose_engine_uses_mineru_for_ocr() -> None:
-    assert choose_engine(Path("scan.pdf"), "auto", ocr=True) == "mineru"
+def test_choose_engine_honors_requested_pdf2txt() -> None:
+    assert choose_engine(Path("scan.pdf"), "pdf2txt") == "pdf2txt"

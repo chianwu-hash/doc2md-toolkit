@@ -1,6 +1,6 @@
 ---
 name: doc2md-toolkit
-description: Convert teacher-provided documents into Markdown or UTF-8 text for AI workflows using the doc2md CLI. Use when Codex needs to extract or convert content from PDFs, Word documents, PowerPoint files, Excel files, HTML, CSV, JSON, XML, EPUB, folders of documents, Chinese teaching materials, vertical Chinese textbook PDFs, scanned/OCR-heavy PDFs, or teacher guide files before summarizing, lesson planning, creating worksheets, or building an AI teaching workbench artifact.
+description: Convert teacher-provided documents into Markdown or UTF-8 text for AI workflows using the doc2md CLI. Use when Codex needs to extract or convert content from PDFs, Word documents, PowerPoint files, Excel files, HTML, CSV, JSON, XML, EPUB, folders of documents, Chinese teaching materials, vertical Chinese textbook PDFs, or teacher guide files before summarizing, lesson planning, creating worksheets, or building an AI teaching workbench artifact.
 ---
 
 # doc2md-toolkit
@@ -12,9 +12,10 @@ Use this skill when a task needs source documents converted into Markdown or tex
 1. Identify the source file or folder and desired output folder.
 2. Install the toolkit if `doc2md` is unavailable.
 3. For Chinese teaching-material PDFs, convert with `pdf2txt` by default and save Markdown as the primary source.
-4. Use MinerU only as a secondary check when complex tables, image questions, OCR, or mixed layouts make `pdf2txt` unclear.
-5. Use UTF-8 output artifacts as the source of truth.
-6. Continue the teaching or analysis task from the converted `.md` or `.txt` files.
+4. For Word, PowerPoint, Excel, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs, use MarkItDown.
+5. For scanned PDFs, image-only files, OCR-heavy documents, complex tables, formulas, or mixed layouts, do not pretend conversion is complete; mark the file as needing OCR or human confirmation.
+6. Use UTF-8 output artifacts as the source of truth.
+7. Continue the teaching or analysis task from the converted `.md` or `.txt` files.
 
 ## Install
 
@@ -28,12 +29,6 @@ For broader Office/document support:
 
 ```powershell
 pip install -e ".[all]"
-```
-
-Local MinerU dependencies can be heavy. Prefer MinerU API when OCR, scanned PDFs, formulas, tables, or complex layouts require a second pass. Install local MinerU only when the machine has enough resources and the user explicitly wants local processing:
-
-```powershell
-pip install -e ".[mineru]"
 ```
 
 If the user provided the GitHub URL rather than a local checkout, clone or download the repo first, then install from its root.
@@ -76,8 +71,7 @@ Prefer `--engine auto` unless there is a clear reason to choose one.
 
 - Use `pdf2txt` or `--vertical-text` as the main path for Chinese teaching materials, Mandarin textbooks, teacher guides, textbook PDFs, and vertical Chinese PDFs that extract as one character per line.
 - Use `markitdown` for Word, PowerPoint, Excel, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs.
-- Use MinerU API as a second-pass reference for scanned PDFs, OCR-heavy documents, image questions, complex layout, tables, or formulas.
-- Use local `mineru` / `--ocr` only for advanced local setups. Do not make it the default on ordinary teaching machines.
+- For scanned PDFs, image-only documents, OCR-heavy files, complex layout, tables, or formulas, do not pretend conversion is complete. Mark the file as needing OCR or human confirmation before using another specialized tool.
 
 Examples:
 
@@ -85,18 +79,15 @@ Examples:
 doc2md "一般文件.docx" --engine markitdown
 doc2md "國語教材.pdf" --engine pdf2txt
 doc2md "直行教材.pdf" --vertical-text
-doc2md "掃描文件.pdf" --engine mineru
 ```
 
 For teaching-material PDFs, the practical SOP is:
 
 ```text
 pdf2txt Markdown = primary source
-MinerU API output = helper for difficult tables/layouts
 MarkItDown = not recommended for Chinese textbook/teacher-guide PDFs
+OCR or human confirmation = needed for scanned/image-only files
 ```
-
-If a MinerU API token is available, read it from `MINERU_API_TOKEN`; never paste tokens into tracked files or logs.
 
 ## Windows And Chinese Text
 
