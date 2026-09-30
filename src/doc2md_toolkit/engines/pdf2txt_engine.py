@@ -53,18 +53,34 @@ def normalize_vertical_text(text: str, min_run: int = 4) -> str:
     return "\n".join(cleaned).strip()
 
 
+def text_layer_pages(src: Path) -> tuple[list[int], list[int]]:
+    try:
+        import pymupdf as fitz
+    except ImportError as exc:
+        raise RuntimeError("尚未安裝 PyMuPDF。請執行 `pip install PyMuPDF`。") from exc
+
+    readable: list[int] = []
+    missing: list[int] = []
+    with fitz.open(src) as doc:
+        for number, page in enumerate(doc, start=1):
+            (readable if page.get_text().strip() else missing).append(number)
+    return readable, missing
+
+
 def convert(src: Path, output_format: str = "md") -> str:
     try:
-        import fitz
+        import pymupdf as fitz
     except ImportError as exc:
-        raise RuntimeError("PyMuPDF is not installed. Install with `pip install PyMuPDF`.") from exc
+        raise RuntimeError("尚未安裝 PyMuPDF。請執行 `pip install PyMuPDF`。") from exc
 
-    doc = fitz.open(src)
     chunks: list[str] = []
-    for index, page in enumerate(doc, start=1):
-        normalized = normalize_vertical_text(page.get_text())
-        if output_format == "md":
-            chunks.append(f"## Page {index}\n\n{normalized}".strip())
-        else:
-            chunks.append(f"=== Page {index} ===\n{normalized}".strip())
-    return "\n\n".join(chunks).strip()
+    has_text = False
+    with fitz.open(src) as doc:
+        for index, page in enumerate(doc, start=1):
+            normalized = normalize_vertical_text(page.get_text())
+            has_text = has_text or bool(normalized)
+            if output_format == "md":
+                chunks.append(f"## Page {index}\n\n{normalized}".strip())
+            else:
+                chunks.append(f"=== Page {index} ===\n{normalized}".strip())
+    return "\n\n".join(chunks).strip() if has_text else ""

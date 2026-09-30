@@ -1,5 +1,5 @@
 ---
-name: doc2md-toolkit
+name: doc2md
 description: Convert teacher-provided documents into Markdown or UTF-8 text for AI workflows using the doc2md CLI. Use when Codex needs to extract or convert content from PDFs, Word documents, PowerPoint files, Excel files, HTML, CSV, JSON, XML, EPUB, folders of documents, Chinese teaching materials, vertical Chinese textbook PDFs, or teacher guide files before summarizing, lesson planning, creating worksheets, or building an AI teaching workbench artifact.
 ---
 
@@ -10,17 +10,18 @@ Use this skill when a task needs source documents converted into Markdown or tex
 ## Core Workflow
 
 1. Identify the source file or folder and desired output folder.
-2. Install the toolkit if `doc2md` is unavailable.
-3. Triage PDFs by page count and layout before deep conversion:
+2. Check whether the document contains student, parent, confidential, or unpublished information before using any external service. The default CLI stays local.
+3. Install the toolkit if `doc2md` is unavailable.
+4. Triage PDFs by page count and layout before deep conversion:
    - For 1-3 page schedules, notices, simple tables, or visually clear forms, run quick text/table extraction first, then render page images and visually verify when text is mojibake, columns break, red/marked changes matter, or the user's goal is comparison rather than full transcription.
    - Treat extracted text as a draft and the rendered page image as the authority when the PDF text layer is corrupt or layout-critical.
    - For longer, text-heavy, or reusable documents, prefer normal extraction first; render images only to spot-check unclear pages.
-4. For Chinese teaching-material PDFs, convert with `pdf2txt` by default and save Markdown as the primary source.
-5. For Word, PowerPoint, Excel, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs, use MarkItDown.
-6. For scanned PDFs, image-only files, or PDFs without a text layer up to 10 pages, convert pages to images and use small-batch OCR or AI vision as a rescue path.
-7. For scanned/image-only documents over 10 pages, complex tables, formulas, or mixed layouts, do not pretend conversion is complete; mark the file as needing formal OCR or human confirmation.
-8. Use UTF-8 output artifacts as the source of truth.
-9. Continue the teaching or analysis task from the converted `.md` or `.txt` files.
+5. For Chinese teaching-material PDFs with recognizable filenames, `auto` chooses `pdf2txt`. Otherwise use `--engine pdf2txt` explicitly and save Markdown as the primary source.
+6. For `.docx`, `.pptx`, `.xlsx`, `.xls`, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs, use MarkItDown. Convert legacy `.doc` or `.ppt` to a newer Office format first.
+7. For scanned PDFs, image-only files, or PDFs without a text layer up to 10 pages, the CLI reports no extractable text. If only some pages lack text, the output marks them for review. Convert pages to images and use small-batch OCR or AI vision as a separate rescue path only after checking data-sharing permission.
+8. For scanned/image-only documents over 10 pages, complex tables, formulas, or mixed layouts, do not pretend conversion is complete; mark the file as needing formal OCR or human confirmation.
+9. Use UTF-8 output artifacts as the source of truth.
+10. Continue the teaching or analysis task from the converted `.md` or `.txt` files.
 
 ## Install
 
@@ -74,7 +75,7 @@ doc2md "教材.pdf" --format txt
 
 Prefer `--engine auto` unless there is a clear reason to choose one.
 
-- Use `pdf2txt` or `--vertical-text` as the main path for Chinese teaching materials, Mandarin textbooks, teacher guides, textbook PDFs, and vertical Chinese PDFs that extract as one character per line.
+- Use `--engine pdf2txt` or `--vertical-text` when a Chinese teaching PDF has an ambiguous filename or extracts as one character per line. `auto` only recognizes common teaching terms in the filename.
 - Use `markitdown` for Word, PowerPoint, Excel, HTML, CSV, JSON, XML, EPUB, and general non-teaching PDFs.
 - For short PDF schedules, notices, forms, and simple tables, choose the fastest reliable path: quick extraction for draft text plus rendered-page visual verification when layout, colors, or text-layer corruption could change the answer.
 - For scanned PDFs, image-only documents, or PDFs without a text layer up to 10 pages, convert pages to images and use small-batch OCR or AI vision as a rescue path.

@@ -13,3 +13,8 @@ def test_choose_engine_uses_pdf2txt_for_vertical_pdf() -> None:
 
 def test_choose_engine_honors_requested_pdf2txt() -> None:
     assert choose_engine(Path("scan.pdf"), "pdf2txt") == "pdf2txt"
+
+
+def test_choose_engine_uses_pdf2txt_for_named_teaching_pdf() -> None:
+    assert choose_engine(Path("01_國小國語4上教冊.pdf"), "auto") == "pdf2txt"
+    assert choose_engine(Path("一般公告.pdf"), "auto") == "markitdown"

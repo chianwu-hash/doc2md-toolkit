@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "doc2md-toolkit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Unified CLI for converting teaching PDFs and documents to Markdown or text with pdf2txt and MarkItDown."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,13 +14,13 @@ authors = [
 ]
 keywords = ["markdown", "pdf", "docx", "markitdown", "education"]
 dependencies = [
-  "markitdown>=0.1.5",
-  "PyMuPDF>=1.24,<2"
+  "markitdown>=0.1.8,<0.2",
+  "PyMuPDF>=1.28.2,<1.29"
 ]
 
 [project.optional-dependencies]
 all = [
-  "markitdown[all]>=0.1.5"
+  "markitdown[docx,pptx,xlsx,xls,pdf]>=0.1.8,<0.2"
 ]
 dev = [
   "pytest>=8"

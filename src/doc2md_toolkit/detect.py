@@ -6,9 +6,7 @@ from pathlib import Path
 SUPPORTED_EXTENSIONS = {
     ".pdf",
     ".docx",
-    ".doc",
     ".pptx",
-    ".ppt",
     ".xlsx",
     ".xls",
     ".html",
@@ -18,9 +16,23 @@ SUPPORTED_EXTENSIONS = {
     ".xml",
     ".zip",
     ".epub",
-    ".txt",
-    ".md",
 }
+
+TEACHING_PDF_HINTS = (
+    "教材",
+    "教冊",
+    "教師手冊",
+    "教學篇",
+    "備課",
+    "課本",
+    "習作",
+    "國語",
+    "數學",
+    "自然",
+    "textbook",
+    "teacher-guide",
+    "teacher_guide",
+)
 
 
 def choose_engine(path: Path, requested: str, *, vertical_text: bool = False) -> str:
@@ -29,6 +41,8 @@ def choose_engine(path: Path, requested: str, *, vertical_text: bool = False) ->
 
     suffix = path.suffix.lower()
     if suffix == ".pdf" and vertical_text:
+        return "pdf2txt"
+    if suffix == ".pdf" and any(hint in path.stem.casefold() for hint in TEACHING_PDF_HINTS):
         return "pdf2txt"
     return "markitdown"
 

@@ -24,10 +24,12 @@ https://github.com/chianwu-hash/doc2md-toolkit
 
 | 情境 | 建議引擎 |
 | --- | --- |
-| 中文教材、備課用書、課本 PDF、直行文字 PDF、一字一行抽文字 | `pdf2txt` |
-| Word、PowerPoint、Excel、HTML、CSV、JSON、XML、EPUB、一般非教材 PDF | `markitdown` |
+| 檔名可辨識的中文教材、備課用書、課本 PDF，或指定直行文字 PDF | `pdf2txt` |
+| `.docx`、`.pptx`、`.xlsx`、`.xls`、HTML、CSV、JSON、XML、EPUB、一般非教材 PDF | `markitdown` |
 | 10 頁以內的掃描 PDF、圖片型文件、沒有文字層的 PDF | 可先轉成逐頁圖片，再用小量 OCR 或 AI 視覺讀取救援 |
 | 超過 10 頁的掃描 PDF、圖片型文件、複雜表格、公式、多欄版面 | 不在本工具主流程內，請先標記為需要正式 OCR 或人工確認 |
+
+`auto` 會依檔名中的教材線索選擇 PDF 引擎；若檔名不明確，請加 `--engine pdf2txt`。整份 PDF 無文字層會回報錯誤，部分頁面無文字層則會在輸出中標記待檢查。舊版 `.doc`、`.ppt` 不支援直接轉換，請先轉成 `.docx`、`.pptx`。
 
 教材 PDF 的預設 SOP：
 
@@ -45,7 +47,7 @@ https://github.com/chianwu-hash/doc2md-toolkit
 pip install -e .
 ```
 
-完整 MarkItDown 依賴（主要給 Office / 一般文件使用）：
+常見 Office / PDF 格式所需的 MarkItDown 依賴：
 
 ```powershell
 pip install -e ".[all]"
@@ -106,7 +108,7 @@ doc2md "國語教材.pdf" --engine pdf2txt --format txt
 
 ### 掃描檔與 OCR
 
-本工具不內建重型 OCR 流程。遇到 10 頁以內的掃描 PDF、圖片型文件或沒有文字層的 PDF，可以先轉成逐頁圖片，再用小量 OCR 或 AI 視覺讀取救援。若超過 10 頁，或版面包含複雜表格、公式、多欄內容，不要假裝已完整轉換；請先標記為需要正式 OCR 或人工確認，再視需求使用其他專門工具處理。
+本工具預設只在本機抽取文字，不會上傳文件，也不會自動呼叫雲端 OCR。遇到 10 頁以內的掃描 PDF、圖片型文件或沒有文字層的 PDF，可以先轉成逐頁圖片，再用小量 OCR 或 AI 視覺讀取救援；要使用雲端服務，須先確認資料可上傳。若超過 10 頁，或版面包含複雜表格、公式、多欄內容，請先標記為需要正式 OCR 或人工確認。
 
 ## 授權與第三方工具
 
